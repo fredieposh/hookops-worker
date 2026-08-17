@@ -28,7 +28,7 @@
     "vitest": "^4.1.10"
   },
   "dependencies": {
-    "hookops-shared": "file:../hookops-shared",
+    "@fredieposh/hookops-shared": "^1.0.0",
     "pino": "^10.3.1"
   }
 }
