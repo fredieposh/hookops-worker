@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  quality:
+    name: Lint and Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Node.js 22 setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Node.js 22 setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Test
+        run: npm run test
+
+  build:
+    name: Build
+    needs: [quality, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Node.js 22 setup
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Build
+        run: npm run build
+
+  docker-build:
+    name: Build Docker Image
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up docker builder
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          secrets: NODE_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN}}
