@@ -46,6 +46,31 @@ cp .env.example .env
 
 Never commit `.env`, a token value, or an authenticated `.npmrc`.
 
+## Worker roles
+
+Select the process role with `WORKER_ROLE`.
+
+Stage 0 supports only:
+
+- `bootstrap` — starts the worker's health and dependency-readiness process.
+
+Run it locally with:
+
+```bash
+WORKER_ROLE=bootstrap npm run dev
+```
+
+The following role names are reserved for later stages and are not currently
+implemented:
+
+- `scheduler-control`
+- `tick-dispatcher`
+- `http-executor`
+- `result-maintenance`
+- `telemetry-emitter`
+
+Selecting an unsupported or missing role causes startup to fail immediately.
+
 ## Local development
 
 Node.js is pinned in `.nvmrc`.

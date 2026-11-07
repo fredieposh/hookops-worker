@@ -1,3 +1,3 @@
-import { start } from './index.js';
+import { startWorker } from './bootstrap/role-registry.js';
 
-start();
+await startWorker(process.env.WORKER_ROLE);
