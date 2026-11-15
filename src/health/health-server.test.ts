@@ -1,9 +1,10 @@
 import { describe, expect, vi, onTestFinished, it } from 'vitest';
 import { buildHealthServer, type Readiness } from './health-server.js';
+import pino from 'pino';
 
 function createTestServer(readiness: Readiness = { ready: true, components: {} }) {
   const checkReadiness = vi.fn(async () => readiness);
-  const server = buildHealthServer(checkReadiness);
+  const server = buildHealthServer(pino({ level: 'silent' }), checkReadiness);
 
   onTestFinished(() => server.close());
   return { server, checkReadiness };

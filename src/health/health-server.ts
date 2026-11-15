@@ -1,4 +1,9 @@
-import Fastify from 'fastify';
+import Fastify, { LogController } from 'fastify';
+import type { Logger } from 'pino';
+import {
+  CORRELATION_ID_HEADER,
+  resolveRequestCorrelationId,
+} from '../observability/request-correlation.js';
 
 export interface Readiness {
   readonly ready: boolean;
@@ -7,8 +12,18 @@ export interface Readiness {
 
 export type ReadinessCheck = () => Promise<Readiness>;
 
-export function buildHealthServer(checkReadiness: ReadinessCheck) {
-  const app = Fastify();
+export function buildHealthServer(logger: Logger, checkReadiness: ReadinessCheck) {
+  const app = Fastify({
+    loggerInstance: logger,
+    requestIdHeader: false,
+    genReqId: resolveRequestCorrelationId,
+    logController: new LogController({ requestIdLogLabel: 'correlationId' }),
+  });
+
+  app.addHook('onRequest', (request, reply, done) => {
+    reply.header(CORRELATION_ID_HEADER, request.id);
+    done();
+  });
 
   app.get('/health/live', () => ({ status: 'live' }));
 
