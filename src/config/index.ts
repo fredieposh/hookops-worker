@@ -39,6 +39,6 @@ export function loadConfig(
     serviceName: 'hookops-worker',
     serviceVersion,
     role,
-    healthPort: parseNumber('HEALTH_PORTH', environment.HEALTH_PORT ?? '3001', 1, 65_535),
+    healthPort: parseNumber('HEALTH_PORT', environment.HEALTH_PORT ?? '3001', 1, 65_535),
   };
 }

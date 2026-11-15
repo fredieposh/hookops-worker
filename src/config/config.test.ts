@@ -28,7 +28,7 @@ describe('loadConfig', () => {
     ['HEALTH_PORT', '65536'],
   ])('rejects invalid %s (%s)', (name, value) => {
     expect(() => loadConfig({ ...validEnvironment, [name]: value })).toThrow(
-      `Invalid configuration: ${name}`,
+      new RegExp(`^Invalid configuration: ${name}$`),
     );
   });
 });
