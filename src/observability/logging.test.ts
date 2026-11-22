@@ -37,7 +37,7 @@ describe('worker logging', () => {
       url: '/test/log-request',
       headers: {
         [CORRELATION_ID_HEADER]: correlationId,
-        authorization: 'Bearer authorization-sercret',
+        authorization: 'Bearer authorization-secret',
       },
       payload: { password: 'password-secret' },
     });
@@ -53,15 +53,15 @@ describe('worker logging', () => {
     expect(entries.length).toBeGreaterThan(0);
     for (const entry of entries) {
       expect(entry).toMatchObject({
-        serviceName: 'hookops-worker' as const,
-        serviceVersion: '1.0.0',
+        service: 'hookops-worker',
+        version: '1.0.0',
         role: 'bootstrap',
         correlationId,
       });
     }
 
     expect(output).toContain(PINO_REDACTION_CENSOR);
-    expect(output).not.toContain('authorization-sercret');
+    expect(output).not.toContain('authorization-secret');
     expect(output).not.toContain('password-secret');
   });
 });

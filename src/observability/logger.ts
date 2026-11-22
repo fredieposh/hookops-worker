@@ -10,8 +10,8 @@ export function createLogger(
 ): pino.Logger {
   const options: pino.LoggerOptions = {
     base: {
-      serviceName: config.serviceName,
-      serviceVersion: config.serviceVersion,
+      service: config.serviceName,
+      version: config.serviceVersion,
       role: config.role,
     },
     redact: {
