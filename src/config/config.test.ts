@@ -1,8 +1,10 @@
+import { SUPPORTED_SCHEMA_MAJOR } from '@fredieposh/hookops-shared';
 import { describe, it, expect } from 'vitest';
 import { loadConfig } from './index.js';
 
 const validEnvironment = {
   WORKER_ROLE: 'bootstrap',
+  CONTRACT_MAJOR: String(SUPPORTED_SCHEMA_MAJOR),
   HEALTH_PORT: '3001',
 };
 
@@ -12,12 +14,16 @@ describe('loadConfig', () => {
       serviceName: 'hookops-worker',
       serviceVersion: '1.2.3',
       role: 'bootstrap',
+      contractMajor: SUPPORTED_SCHEMA_MAJOR,
       healthPort: 3001,
     });
   });
 
   it('uses safe local defaults', () => {
-    expect(loadConfig({ WORKER_ROLE: 'bootstrap' })).toMatchObject({ healthPort: 3001 });
+    expect(loadConfig({ WORKER_ROLE: 'bootstrap' })).toMatchObject({
+      contractMajor: SUPPORTED_SCHEMA_MAJOR,
+      healthPort: 3001,
+    });
   });
 
   it.each([

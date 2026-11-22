@@ -1,10 +1,12 @@
 import * as fs from 'node:fs';
+import { SUPPORTED_SCHEMA_MAJOR } from '@fredieposh/hookops-shared';
 
 export interface WorkerConfig {
   readonly serviceName: 'hookops-worker';
   readonly serviceVersion: string;
   readonly role: string;
   readonly healthPort: number;
+  readonly contractMajor: number;
 }
 
 const packageJson = JSON.parse(
@@ -40,5 +42,11 @@ export function loadConfig(
     serviceVersion,
     role,
     healthPort: parseNumber('HEALTH_PORT', environment.HEALTH_PORT ?? '3001', 1, 65_535),
+    contractMajor: parseNumber(
+      'CONTRACT_MAJOR',
+      environment.CONTRACT_MAJOR ?? String(SUPPORTED_SCHEMA_MAJOR),
+      1,
+      Number.MAX_SAFE_INTEGER,
+    ),
   };
 }
