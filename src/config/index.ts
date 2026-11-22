@@ -11,7 +11,7 @@ export interface WorkerConfig {
 
 const packageJson = JSON.parse(
   fs.readFileSync(new URL('../../package.json', import.meta.url), 'utf8'),
-);
+) as { readonly version: string };
 
 function invalidConfiguration(name: string): never {
   throw new Error(`Invalid configuration: ${name}`);
@@ -45,7 +45,7 @@ export function loadConfig(
     contractMajor: parseNumber(
       'CONTRACT_MAJOR',
       environment.CONTRACT_MAJOR ?? String(SUPPORTED_SCHEMA_MAJOR),
-      1,
+      0,
       Number.MAX_SAFE_INTEGER,
     ),
   };
