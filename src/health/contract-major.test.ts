@@ -3,19 +3,22 @@ import { describe, it, vi, expect } from 'vitest';
 import { assessContractMajor } from './contract-major.js';
 
 describe('assessContractMajor', () => {
-  it('logs only bounded metadata for a mismatch', () => {
-    const logger = { error: vi.fn() };
+  it.each([SUPPORTED_SCHEMA_MAJOR + 1, SUPPORTED_SCHEMA_MAJOR - 1])(
+    'logs only bounded metadata for a mismatch (%i)',
+    (configuredMajor) => {
+      const logger = { error: vi.fn() };
 
-    assessContractMajor(SUPPORTED_SCHEMA_MAJOR + 1, logger);
+      assessContractMajor(configuredMajor, logger);
 
-    expect(logger.error).toHaveBeenCalledOnce();
-    expect(logger.error).toHaveBeenCalledWith(
-      {
-        event: 'contract_major_mismatch',
-        configurationContractMajor: SUPPORTED_SCHEMA_MAJOR + 1,
-        compiledContractMajor: SUPPORTED_SCHEMA_MAJOR,
-      },
-      'Configured contract major does not match compiled contract major',
-    );
-  });
+      expect(logger.error).toHaveBeenCalledOnce();
+      expect(logger.error).toHaveBeenCalledWith(
+        {
+          event: 'contract_major_mismatch',
+          configuredContractMajor: configuredMajor,
+          compiledContractMajor: SUPPORTED_SCHEMA_MAJOR,
+        },
+        'Configured contract major does not match compiled contract major',
+      );
+    },
+  );
 });

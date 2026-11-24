@@ -8,7 +8,7 @@ import { assessContractMajor } from './health/contract-major.js';
 const config = loadConfig();
 const logger = createLogger(config);
 
-await startWorker(process.env.WORKER_ROLE);
+await startWorker(config.role);
 logger.info({ event: 'worker_role_started' }, 'Worker role started');
 
 const contractStatus = assessContractMajor(config.contractMajor, logger);

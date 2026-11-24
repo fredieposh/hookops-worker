@@ -24,8 +24,8 @@ export function assessContractMajor(
     logger.error(
       {
         event: 'contract_major_mismatch',
-        configurationContractMajor: SUPPORTED_SCHEMA_MAJOR + 1,
-        compiledContractMajor: SUPPORTED_SCHEMA_MAJOR,
+        configuredContractMajor: status.configuredMajor,
+        compiledContractMajor: status.compiledMajor,
       },
       'Configured contract major does not match compiled contract major',
     );

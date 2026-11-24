@@ -51,7 +51,7 @@ describe('contract-major readiness', () => {
     });
   });
 
-  it('readiness_when_contract_major_matches', async () => {
+  it('readiness_on_contract_major_mismatch', async () => {
     const server = createReadinessServer(SUPPORTED_SCHEMA_MAJOR + 1);
     const response = await server.inject({
       method: 'GET',
